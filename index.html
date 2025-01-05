@@ -19,29 +19,49 @@
             display: block;
             object-fit: contain; /* Maintains aspect ratio */
         }
+        #loading-bar {
+            width: 100%;
+            height: 4px;
+            background-color: #555;
+            position: absolute;
+            bottom: 0;
+        }
+        #loading-bar-progress {
+            height: 100%;
+            background-color: #4caf50;
+            width: 0;
+        }
     </style>
 </head>
 <body>
+<div id="loading-bar">
+    <div id="loading-bar-progress"></div>
+</div>
 <canvas id="unity-canvas"></canvas>
 <script>
-    function resizeCanvas() {
-        var canvas = document.getElementById('unity-canvas');
-        var container = canvas.parentNode;
+    // Unity loader script
+    var buildUrl = "Build"; // Adjust this path if your build folder is named differently
+    var loaderUrl = buildUrl + "/Build.loader.js";
+    var config = {
+        dataUrl: buildUrl + "/Build.data",
+        frameworkUrl: buildUrl + "/Build.framework.js",
+        codeUrl: buildUrl + "/Build.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "YourCompany",
+        productName: "YourGame",
+        productVersion: "1.0",
+    };
 
-        var targetAspect = 16 / 9; // Desired aspect ratio
-        var containerAspect = container.clientWidth / container.clientHeight;
+    var canvas = document.getElementById("unity-canvas");
+    var loadingBar = document.getElementById("loading-bar-progress");
 
-        if (containerAspect > targetAspect) {
-            canvas.style.width = container.clientHeight * targetAspect + 'px';
-            canvas.style.height = container.clientHeight + 'px';
-        } else {
-            canvas.style.width = container.clientWidth + 'px';
-            canvas.style.height = container.clientWidth / targetAspect + 'px';
-        }
-    }
-
-    window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('load', resizeCanvas);
+    createUnityInstance(canvas, config, (progress) => {
+        loadingBar.style.width = 100 * progress + "%";
+    }).then((unityInstance) => {
+        console.log("Unity instance loaded successfully");
+    }).catch((message) => {
+        console.error(message);
+    });
 </script>
 </body>
 </html>
