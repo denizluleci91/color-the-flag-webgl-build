@@ -1,67 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-us">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unity WebGL Game</title>
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-            background-color: black;
-        }
-        #unity-canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-            object-fit: contain; /* Maintains aspect ratio */
-        }
-        #loading-bar {
-            width: 100%;
-            height: 4px;
-            background-color: #555;
-            position: absolute;
-            bottom: 0;
-        }
-        #loading-bar-progress {
-            height: 100%;
-            background-color: #4caf50;
-            width: 0;
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>%UNITY_WEB_NAME%</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="TemplateData/UnityProgress.javascript"></script>
+    <script src="%UNITY_WEBGL_LOADER_URL%"></script>
+    <script>
+        var gameInstance = UnityLoader.instantiate("gameContainer", "%UNITY_WEBGL_BUILD_URL%", {onProgress: UnityProgress});
+    </script>
 </head>
 <body>
-<div id="loading-bar">
-    <div id="loading-bar-progress"></div>
+<div class="webgl-content">
+    <div id="gameContainer" style="width: %UNITY_WIDTH%px; height: %UNITY_HEIGHT%px"></div>
 </div>
-<canvas id="unity-canvas"></canvas>
-<script>
-    // Unity loader script
-    var buildUrl = "Build"; // Adjust this path if your build folder is named differently
-    var loaderUrl = buildUrl + "/Build.loader.js";
-    var config = {
-        dataUrl: buildUrl + "/Build.data",
-        frameworkUrl: buildUrl + "/Build.framework.js",
-        codeUrl: buildUrl + "/Build.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "YourCompany",
-        productName: "YourGame",
-        productVersion: "1.0",
-    };
-
-    var canvas = document.getElementById("unity-canvas");
-    var loadingBar = document.getElementById("loading-bar-progress");
-
-    createUnityInstance(canvas, config, (progress) => {
-        loadingBar.style.width = 100 * progress + "%";
-    }).then((unityInstance) => {
-        console.log("Unity instance loaded successfully");
-    }).catch((message) => {
-        console.error(message);
-    });
-</script>
+<div class="simmer">template by: <a href="https://simmer.io" target="_blank">SIMMER.io</a></div>
+<script src="TemplateData/responsive.javascript"></script>
 </body>
 </html>
