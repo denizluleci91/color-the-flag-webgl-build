@@ -6,7 +6,7 @@
     <title>Unity WebGL Player | Paint the Flag</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-	<style>
+	    <style>
       body, html {
         margin: 0;
         padding: 0;
@@ -27,8 +27,6 @@
       }
 
       #unity-canvas {
-        width: 100%;
-        height: 100%;
         max-width: 100%;
         max-height: 100%;
       }
@@ -59,7 +57,7 @@
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas"></canvas>
+      <canvas id="unity-canvas" width="1080" height="1920"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
@@ -100,18 +98,17 @@
       var buildUrl = "Build";
       var loaderUrl = buildUrl + "/webgl.loader.js";
       var config = {
-        dataUrl: buildUrl + "/36c40147cd8f551303aa1b57141a4785.data",
-        frameworkUrl: buildUrl + "/a1fcd2a88dbf46e9a5643f85a3457d3d.js",
-        codeUrl: buildUrl + "/f707fe1b3d8dbc4cb237e4352d2f8388.wasm",
+        dataUrl: buildUrl + "/40d57df9263389bbdd7f599e69349a7e.data",
+        frameworkUrl: buildUrl + "/e3eab17cdb7c55fc65992667ac393dac.js",
+        codeUrl: buildUrl + "/1ce69e755f85092da144ffd664e4a2c8.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "Mobsmile",
         productName: "Paint the Flag",
         productVersion: "2.6.0",
         showBanner: unityShowBanner,
       };
-
-      // Mobile device handling
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+	  
+		if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         var meta = document.createElement('meta');
         meta.name = 'viewport';
         meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
@@ -121,13 +118,27 @@
 
         unityShowBanner('WebGL builds are not supported on mobile devices.');
       } else {
-        // Desktop handling
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
-		window.addEventListener('resize', () => {
-          canvas.width = container.clientWidth;
-          canvas.height = container.clientHeight;
-        });
+        // Fix aspect ratio to 1080x1920
+        function adjustCanvasSize() {
+          var aspectRatio = 1080 / 1920;
+          var width = window.innerWidth;
+          var height = window.innerHeight;
+          var newWidth, newHeight;
+
+          if (width / height > aspectRatio) {
+            newHeight = height;
+            newWidth = height * aspectRatio;
+          } else {
+            newWidth = width;
+            newHeight = width / aspectRatio;
+          }
+
+          canvas.width = newWidth;
+          canvas.height = newHeight;
+        }
+
+        window.addEventListener('resize', adjustCanvasSize);
+        adjustCanvasSize(); // Call once to set the initial size
       }
 
       loadingBar.style.display = "block";
