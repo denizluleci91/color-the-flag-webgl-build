@@ -2,7 +2,6 @@
 <html lang="en-us">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Unity WebGL Player | Paint the Flag</title>
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
@@ -23,10 +22,13 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      background-color: #000;
     }
     canvas {
-      width: 100%;
-      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
       display: block;
     }
     #unity-loading-bar {
@@ -34,6 +36,16 @@
       bottom: 10px;
       width: 90%;
       max-width: 400px;
+    }
+    #unity-warning {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      text-align: center;
+      color: white;
+      background-color: red;
+      z-index: 10;
+      display: none;
     }
   </style>
 </head>
@@ -46,7 +58,7 @@
       <div id="unity-progress-bar-full"></div>
     </div>
   </div>
-  <div id="unity-warning"> </div>
+  <div id="unity-warning"></div>
   <div id="unity-footer">
     <div id="unity-webgl-logo"></div>
     <div id="unity-fullscreen-button"></div>
@@ -61,9 +73,29 @@
   var fullscreenButton = document.querySelector("#unity-fullscreen-button");
   var warningBanner = document.querySelector("#unity-warning");
 
+  function unityShowBanner(msg, type) {
+    var div = document.createElement('div');
+    div.innerHTML = msg;
+    warningBanner.appendChild(div);
+    warningBanner.style.display = "block";
+    if (type === 'error') {
+      div.style = 'background: red; padding: 10px; color: white;';
+    } else if (type === 'warning') {
+      div.style = 'background: yellow; padding: 10px; color: black;';
+      setTimeout(() => {
+        warningBanner.removeChild(div);
+        if (warningBanner.children.length === 0) {
+          warningBanner.style.display = "none";
+        }
+      }, 5000);
+    }
+  }
+
   function resizeCanvas() {
     canvas.style.width = "100%";
     canvas.style.height = "100%";
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
   }
 
   window.addEventListener("resize", resizeCanvas);
@@ -72,7 +104,7 @@
   var buildUrl = "Build";
   var loaderUrl = buildUrl + "/webgl.loader.js";
   var config = {
-    dataUrl: buildUrl + "/58fef9cac6f9a6f3676cf8fa0e1bf7aa.data",
+    dataUrl: buildUrl + "/e56ff36271ad6c8f2929d64b0077ad4a.data",
     frameworkUrl: buildUrl + "/a1fcd2a88dbf46e9a5643f85a3457d3d.js",
     codeUrl: buildUrl + "/f707fe1b3d8dbc4cb237e4352d2f8388.wasm",
     streamingAssetsUrl: "StreamingAssets",
@@ -83,7 +115,7 @@
   };
 
   if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-    unityShowBanner('WebGL builds are not supported on mobile devices.');
+    unityShowBanner('WebGL builds are not supported on mobile devices.', 'warning');
   }
 
   var script = document.createElement("script");
