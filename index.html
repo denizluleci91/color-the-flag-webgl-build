@@ -125,12 +125,14 @@
           var height = window.innerHeight;
           var newWidth, newHeight;
 
-          if (width / height > aspectRatio) {
-            newHeight = height;
-            newWidth = height * aspectRatio;
+          if (width / height < aspectRatio) {
+            // If the screen is taller than the aspect ratio, fit width
+            var newWidth = width;
+            var newHeight = width / aspectRatio;
           } else {
-            newWidth = width;
-            newHeight = width / aspectRatio;
+            // Otherwise, fit height
+            var newHeight = height;
+            var newWidth = height * aspectRatio;
           }
 
           canvas.width = newWidth;
